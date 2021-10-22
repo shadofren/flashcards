@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -38,15 +38,15 @@ var useCmd = &cobra.Command{
 		if _, ok := allsMap[plan]; ok {
 			viper.Set("Current", plan)
 		} else {
-			fmt.Println("Plan doesn't exist, creating", plan)
+			log.Println("Plan doesn't exist, creating", plan)
 			alls = append(alls, plan)
 			viper.Set("Current", plan)
 			viper.Set("Alls", alls)
-			if err := viper.WriteConfig(); err != nil {
-				fmt.Println("Unable to update config file", err)
-			}
 		}
-		fmt.Println("Now using", plan)
+		if err := viper.WriteConfig(); err != nil {
+			log.Println("Unable to update config file", err)
+		}
+		log.Println("Now using", plan)
 	},
 }
 

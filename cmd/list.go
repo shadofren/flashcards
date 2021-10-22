@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -31,9 +31,9 @@ var listCmd = &cobra.Command{
 		current := viper.GetString("Current")
 		for _, plan := range viper.GetStringSlice("Alls") {
 			if plan == current {
-				fmt.Println("* ", plan)
+				log.Println(" * ", plan)
 			} else {
-				fmt.Println("  ", plan)
+				log.Println("   ", plan)
 			}
 		}
 	},

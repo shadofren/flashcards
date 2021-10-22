@@ -16,18 +16,32 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"path"
 
+	"github.com/shadofren/flashcards/db"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // studyCmd represents the study command
 var studyCmd = &cobra.Command{
 	Use:   "study",
-	Short: "Study mode, list the items one by one",
+	Short: "Study mode, list the items one by one, sorted by the least familarity",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("study called")
+		plan := viper.GetString("Current")
+		dbFile := path.Join(DBPath, plan+".sqlite")
+		database := db.Connect(dbFile)
+		buf := bufio.NewReader(os.Stdin)
+		for _, row := range db.ListTopRows(database, 1000) {
+			fmt.Printf("Question: %s\nAnswer: %s", row.Question, row.Answer)
+			buf.ReadBytes('\n')
+			fmt.Println()
+		}
+		fmt.Println("DONE")
 	},
 }
 
@@ -36,11 +50,6 @@ func init() {
 
 	// Here you will define your flags and configuration settings.
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	// studyCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	// studyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

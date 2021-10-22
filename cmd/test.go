@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -27,7 +27,7 @@ var testCmd = &cobra.Command{
 	Short: "Test mode with 100 questions and score",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("test called")
+		log.Println("test called")
 	},
 }
 

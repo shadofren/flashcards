@@ -16,8 +16,9 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
+	"path"
 
 	"github.com/spf13/cobra"
 
@@ -25,6 +26,8 @@ import (
 )
 
 var cfgFile string
+var defaultCfgFile = "config.yaml"
+var DBPath string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -49,22 +52,27 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.flashcards.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/.flashcards.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	log.Println("initConfig")
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
-
 	} else {
 		// Find home directory.
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
-
+		configPath := path.Join(home, ".config", "flashcards")
+		DBPath = path.Join(configPath, "dbs")
+		if _, err := os.Stat(configPath); os.IsNotExist(err) {
+			os.MkdirAll(configPath, 0700)
+			os.Mkdir(DBPath, 0700)
+		}
 		// Search config in home directory with name ".flashcards" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(configPath)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".flashcards")
 	}
@@ -72,6 +80,13 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Println("Using config file:", viper.ConfigFileUsed())
+	} else {
+		conf, err := os.Open(defaultCfgFile)
+		if err != nil {
+			log.Fatalf("default config %s not found", defaultCfgFile)
+		}
+		viper.ReadConfig(conf)
+		viper.SafeWriteConfig()
 	}
 }

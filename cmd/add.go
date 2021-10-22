@@ -16,10 +16,15 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"path"
 
+	"github.com/shadofren/flashcards/db"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
+
+var question string
+var answer string
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
@@ -27,12 +32,18 @@ var addCmd = &cobra.Command{
 	Short: "Add a new question & answer into current plan",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		plan := viper.GetString("Current")
+		dbFile := path.Join(DBPath, plan+".sqlite")
+		database := db.Connect(dbFile)
+		row := db.Get(database, question)
+		if row == nil {
+			db.Insert(database, question, answer)
+		} else {
+			row.Answer = answer
+			db.Update(database, row)
+		}
 	},
 }
-
-var question string
-var answer string
 
 func init() {
 	rootCmd.AddCommand(addCmd)
