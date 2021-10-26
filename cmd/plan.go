@@ -16,34 +16,19 @@ limitations under the License.
 package cmd
 
 import (
-	"strings"
-
 	"github.com/spf13/cobra"
 )
 
-// cleanCmd represents the clean command
-var cleanCmd = &cobra.Command{
-	Use:   "clean",
-	Short: "Clean a plan or clean all plans",
-	Long: `Clean all plans: flashcards clean all
-Clean a plan: flashcards clean <plan>
-`,
-	Args: cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		plan := args[0]
-		var cleanAll bool
-		if strings.EqualFold(plan, "all") {
-			cleanAll = true
-		}
-		if cleanAll {
-
-		}
-	},
+// planCmd represents the plan command
+var planCmd = &cobra.Command{
+	Use:   "plan",
+	Short: "Action on the plans",
+	Long:  ``,
 }
 
 func init() {
-	rootCmd.AddCommand(cleanCmd)
+	rootCmd.AddCommand(planCmd)
 
-	// cleanCmd.PersistentFlags().String("foo", "", "A help for foo")
-	// cleanCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// planCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// planCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -48,8 +48,6 @@ var studyCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(studyCmd)
 
-	// Here you will define your flags and configuration settings.
-
 	// studyCmd.PersistentFlags().String("foo", "", "A help for foo")
 	// studyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

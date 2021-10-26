@@ -40,7 +40,7 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	planCmd.AddCommand(listCmd)
 
 	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
